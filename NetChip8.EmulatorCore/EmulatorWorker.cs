@@ -36,8 +36,9 @@ public class EmulatorWorker : IHostedService
     {
         _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-        _memoryService.LoadProgram("ibm-logo");
-
+        //_memoryService.LoadProgram("ibm-logo");
+        _memoryService.LoadProgram("tetris");
+        
         _task = Task.Run(() => CpuLoop(_cts.Token), cancellationToken);
 
         return Task.CompletedTask;

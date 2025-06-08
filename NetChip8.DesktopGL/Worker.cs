@@ -29,6 +29,9 @@ internal class Worker : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        throw new System.NotImplementedException();
+        _game.Game.Exit();
+        _game.Dispose();
+        
+        return Task.CompletedTask;
     }
 }

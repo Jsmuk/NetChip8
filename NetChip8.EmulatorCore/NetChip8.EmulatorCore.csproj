@@ -20,15 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ROMs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NetChip8.Emulator.Shared\NetChip8.Emulator.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ROMs\ibm-logo.c8">
+    <None Update="ROMs\ibm-logo.ch8">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ROMs\tetris.ch8">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -33,13 +33,12 @@ internal class RegisterService : IRegisterService
         return value;
     }
 
-    public byte AddRegister(byte register, byte value)
+    public byte Add(byte register, byte value)
     {
         AssertValidRegisterIndex(register);
-        _variableRegister[register] = (byte)(_variableRegister[register] + value);
-
-        return _variableRegister[register];
+        return _variableRegister[register] = (byte)(_variableRegister[register] + value);
     }
+    
 
     public bool ReadFlagRegister()
     {
@@ -50,6 +49,8 @@ internal class RegisterService : IRegisterService
     {
         throw new NotImplementedException();
     }
+
+    public byte this[byte index] => ReadRegister(index);
 
     private static void AssertValidRegisterIndex(byte register)
     {
