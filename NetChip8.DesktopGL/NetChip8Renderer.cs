@@ -72,6 +72,8 @@ public class NetChip8Renderer : Game, IGame
         var keyboardState = Keyboard.GetState();
         _input.ClearState();
         
+        _processor.TickTimers();
+        
         foreach (var kvp in _keyboardMapProvider.GetMap())
         {
             if (keyboardState.IsKeyDown(kvp.Key))
@@ -91,12 +93,12 @@ public class NetChip8Renderer : Game, IGame
 
     protected override void Draw(GameTime gameTime)
     {
-        
+        /*
         if (!_framebufferService.RedrawNeeded)
         {
             return;
         }
-        
+        */
 
         GraphicsDevice.Clear(Color.SlateGray);
 
