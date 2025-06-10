@@ -9,6 +9,7 @@ var host = Host.CreateDefaultBuilder(args);
 host.ConfigureServices((hostContext, services) =>
 {
     services.AddSingleton<IGame, NetChip8Renderer>();
+    services.AddSingleton<KeyboardMapProvider>();
     services.AddHostedService<Worker>();
 
 });

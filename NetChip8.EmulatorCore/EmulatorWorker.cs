@@ -4,7 +4,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using NetChip8.Emulator.Shared.Interfaces;
-using NetChip8.EmulatorCore.Services;
 
 namespace NetChip8.EmulatorCore;
 public class EmulatorWorker : IHostedService 
@@ -14,10 +13,11 @@ public class EmulatorWorker : IHostedService
     private readonly ILogger<EmulatorWorker> _logger;
     
     private readonly int _targetHz;
-    private double _targetFrameTime;
-    private int _cycleCount = 0;
-    private double _lastTimeCheck = 0;
-    private int _statsCount = 0;
+    private readonly double _targetFrameTime;
+    private const int InstructionsPerTick = 10;
+    private int _cycleCount;
+    private double _lastTimeCheck;
+    private int _statsCount;
 
     private CancellationTokenSource? _cts;
     private Task? _task;

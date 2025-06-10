@@ -15,8 +15,9 @@ public static class DiExtension
             services.AddSingleton<IProcessorService, ProcessorService>();
             services.AddSingleton<IRegisterService, RegisterService>();
             services.AddSingleton<IFrameBufferService, FrameBufferService>();
+            services.AddSingleton<IInputService, InputService>();
 
-            services.AddHostedService<EmulatorWorker>();
+            //services.AddHostedService<EmulatorWorker>();
         });
         
         return applicationBuilder;

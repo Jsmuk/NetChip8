@@ -10,6 +10,12 @@ public interface IRegisterService
     public byte Add(byte register, byte value);
     public bool ReadFlagRegister();
     public void SetFlagRegister(bool value);
+    public void SetDelayTimer(byte value);
+    public void DecrementDelayTimer();
+    public byte ReadDelayTimer();
+    public void SetSoundTimer(byte value);
+    public void DecrementSoundtimer();
+    public byte ReadSoundtimer();
 
     byte this[byte index]
     {

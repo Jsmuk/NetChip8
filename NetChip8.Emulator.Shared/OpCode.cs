@@ -8,12 +8,12 @@ public record OpCode
     public ushort Op { get; init; }
     
     /// <summary>
-    /// Second Nipple (Register lookup)
+    /// Second Nibble (Register lookup)
     /// </summary>
     public byte X { get; init; }
 
     /// <summary>
-    /// Third nibble (Register lookup)
+    /// Third Nibble (Register lookup)
     /// </summary>
     public byte Y { get; init; }
 

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Reflection.Emit;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using NetChip8.Emulator.Shared;
 using NetChip8.Emulator.Shared.Exceptions;
@@ -14,6 +11,7 @@ internal class ProcessorService : IProcessorService
     private readonly IMemoryService _memory;
     private readonly IRegisterService _register;
     private readonly IFrameBufferService _frameBuffer;
+    private readonly IInputService _input;
     private readonly ILogger<ProcessorService> _logger;
 
     private ushort _programCounter;
@@ -24,12 +22,13 @@ internal class ProcessorService : IProcessorService
     private const ushort FontStartAddress = 0x050;
     private const int FontSize = 5;
 
-    public ProcessorService(IMemoryService memory, IRegisterService register, ILogger<ProcessorService> logger, IFrameBufferService frameBuffer)
+    public ProcessorService(IMemoryService memory, IRegisterService register, ILogger<ProcessorService> logger, IFrameBufferService frameBuffer, IInputService input)
     {
         _memory = memory;
         _register = register;
         _logger = logger;
         _frameBuffer = frameBuffer;
+        _input = input;
         _indexRegister = 0;
         _programCounter = 0x200;
         _stack = new Stack<ushort>(16);
@@ -103,7 +102,13 @@ internal class ProcessorService : IProcessorService
             _ => throw new NotImplementedException()
         };
     }
-    
+
+    public void TickTimers()
+    {
+        _register.DecrementDelayTimer();
+        _register.DecrementSoundtimer();
+    }
+
     private void Execute(InstructionLabel label, OpCode opCode)
     {
         byte xValue;
@@ -163,12 +168,12 @@ internal class ProcessorService : IProcessorService
             case InstructionLabel.And:
                 xValue = _register[opCode.X];
                 yValue = _register[opCode.Y];
-                _register.SetRegister(opCode.X, xValue &= yValue);
+                _register.SetRegister(opCode.X, (byte)(xValue & yValue));
                 break;
             case InstructionLabel.Xor:
                 xValue = _register[opCode.X];
                 yValue = _register[opCode.Y];
-                _register.SetRegister(opCode.X, xValue ^= yValue);
+                _register.SetRegister(opCode.X, (byte)(xValue ^ yValue));
                 break;
             case InstructionLabel.Addr:
                 overflow = (_register[opCode.X] + _register[opCode.Y]) > 0xFF;
@@ -216,20 +221,35 @@ internal class ProcessorService : IProcessorService
                 Draw(opCode);
                 break;
             case InstructionLabel.Skpr:
+                if (_input.IsKeyPressed((Chip8Key)_register[opCode.X]))
+                {
+                    _programCounter += 2;
+                }
                 break;
             case InstructionLabel.Skup:
+                if (!_input.IsKeyPressed((Chip8Key)_register[opCode.X]))
+                {
+                    _programCounter += 2;
+                }
                 break;
             case InstructionLabel.Moved:
+                _register.SetRegister(opCode.X,_register.ReadDelayTimer());
                 break;
             case InstructionLabel.Keyd:
+                if (!_input.IsAnyKeyPressed())
+                {
+                    _programCounter -= 2;
+                }
                 break;
             case InstructionLabel.Loadd:
+                _register.SetDelayTimer(_register[opCode.X]);
                 break;
             case InstructionLabel.Loads:
+                _register.SetSoundTimer(_register[opCode.X]);
                 break;
             case InstructionLabel.Addi:
-                overflow = (_register[opCode.X] + _indexRegister) > 0xFF;
-                _register.SetFlagRegister(overflow);
+                //overflow = (_register[opCode.X] + _indexRegister) > 0xFF;
+                //_register.SetFlagRegister(overflow);
                 _indexRegister += _register[opCode.X];
                 break;
             case InstructionLabel.Ldspr:
@@ -244,8 +264,16 @@ internal class ProcessorService : IProcessorService
                 BCD(opCode);
                 break;
             case InstructionLabel.Stor:
+                for (int i = 0; i <= opCode.X; i++)
+                {
+                    _memory.WriteByte((ushort)(_indexRegister + i), _register[(byte)i]);
+                }
                 break;
             case InstructionLabel.Read:
+                for (int i = 0; i <= opCode.X; i++)
+                {
+                    _register.SetRegister((byte)i, _memory.ReadByte((ushort)(_indexRegister + i)));
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(label), label, null);
@@ -283,6 +311,8 @@ internal class ProcessorService : IProcessorService
 
             }
         }
+        
+        _frameBuffer.SetRedrawFlag();
     }
 
     private void BCD(OpCode opcode)

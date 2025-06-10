@@ -6,4 +6,5 @@ public interface IProcessorService
 {
     void Cycle();
     InstructionLabel Decode(OpCode opCode);
+    void TickTimers();
 }

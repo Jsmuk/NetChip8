@@ -42,17 +42,17 @@ A CHIP-8 emulator implemented in **C# / .NET** with **MonoGame**, featuring comp
 | BNNN   | Jumpi   | JP V0, addr | ✅   |
 | CXNN   | Rand    | RND Vx, byte | ✅  |
 | DXYN   | Draw    | DRW Vx, Vy, nibble | ✅ |
-| EX9E   | Skpr    | SKP Vx    | ❌     |
-| EXA1   | Skup    | SKNP Vx   | ❌     |
-| FX07   | Moved   | LD Vx, DT | ❌     |
-| FX0A   | Keyd    | LD Vx, K  | ❌     |
-| FX15   | Loadd   | LD DT, Vx | ❌     |
-| FX18   | Loads   | LD ST, Vx | ❌     |
+| EX9E   | Skpr    | SKP Vx    | ✅     |
+| EXA1   | Skup    | SKNP Vx   | ✅     |
+| FX07   | Moved   | LD Vx, DT | ✅     |
+| FX0A   | Keyd    | LD Vx, K  | ✅     |
+| FX15   | Loadd   | LD DT, Vx | ✅     |
+| FX18   | Loads   | LD ST, Vx | ✅     |
 | FX1E   | Addi    | ADD I, Vx | ✅     |
 | FX29   | Ldspr   | LD F, Vx  | ✅     |
 | FX33   | Bcd     | LD B, Vx  | ✅     |
-| FX55   | Stor    | LD [I], Vx | ❌    |
-| FX65   | Read    | LD Vx, [I] | ❌    |
+| FX55   | Stor    | LD [I], Vx | ✅    |
+| FX65   | Read    | LD Vx, [I] | ✅    |
 
 - ✅ – Implemented  
 - ❌ – Not yet implemented  
