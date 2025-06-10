@@ -30,8 +30,9 @@ internal class ProcessorService : IProcessorService
         _frameBuffer = frameBuffer;
         _input = input;
         _indexRegister = 0;
-        _programCounter = 0x200;
         _stack = new Stack<ushort>(16);
+        
+        Jump(0x200);
 
     }
 
@@ -41,6 +42,11 @@ internal class ProcessorService : IProcessorService
         var nextInstruction = Fetch();
         var label = Decode(nextInstruction);
         Execute(label, nextInstruction);
+    }
+
+    public void Jump(ushort address)
+    {
+        _programCounter = address;
     }
 
     private OpCode Fetch()
